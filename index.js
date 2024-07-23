@@ -55,6 +55,24 @@ app.get('/5pam24', async (req, res) => {
     }
   });
 
+app.get('/SMJ24', async (req, res) => {
+    try {
+      const db = client.db('Link');
+      const collection = db.collection('Links');
+      const doc = await collection.findOne({ ln: 3 });
+      console.log(doc)
+      if (doc && doc.status === 1 && doc.redirectUrl) {
+        res.redirect(doc.redirectUrl);
+      } else {
+        res.status(404).send('Redirect URL not found or status is not 1');
+      }
+    } catch (err) {
+      console.error('Error fetching redirection URL from the database:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
 
 // Start server
 app.listen(PORT, () => {
